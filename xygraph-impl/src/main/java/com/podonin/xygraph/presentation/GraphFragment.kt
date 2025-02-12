@@ -37,17 +37,25 @@ class GraphFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding?.recyclerView?.adapter = tableAdapter
+        val xyPoints = screenData?.points.orEmpty()
         val itemList = listOf(
             TableItem.TitleItem(
                 title = getString(R.string.table_index),
                 xLabel = getString(R.string.table_x_label),
                 yLabel = getString(R.string.table_y_label)
             )
-        ) + screenData?.points.orEmpty().map {
+        ) + xyPoints.map {
             TableItem.PointItem(it)
         }
 
         tableAdapter.setData(itemList)
+        binding?.graphView?.setPoints(
+            xyPoints.sortedBy { it.x }
+        )
+
+        binding?.smoothButton?.setOnClickListener {
+            binding?.graphView?.switchIsSmooth()
+        }
     }
 
     companion object {

@@ -16,13 +16,17 @@ class MainViewModel @Inject constructor(
 
     fun navigateToFeatureScreen() {
         router.navigateTo(
-            graphScreenProvider.getXYGraphScreen(generateTableData(Random.nextInt(1, 10)))
+            graphScreenProvider.getXYGraphScreen(generateTableData(Random.nextInt(1, 100)))
         )
     }
 
     private fun generateTableData(pointsCount: Int): List<XYPoint> {
         return List(pointsCount) { index ->
-            XYPoint(index + 1, Random.nextFloat() * 10, Random.nextFloat() * 10)
+            XYPoint(
+                index + 1,
+                Random.nextInt(-10, 10) + Random.nextFloat(),
+                Random.nextInt(-10, 10) + Random.nextFloat()
+            )
         }
     }
 }
