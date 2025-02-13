@@ -3,7 +3,6 @@ package com.podonin.points_count_impl.presentation.pointscountscreen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.terrakok.cicerone.Router
-import com.podonin.points_count_api.domain.entity.XYPoint
 import com.podonin.points_count_impl.R
 import com.podonin.points_count_impl.domain.PointsCountInteractor
 import com.podonin.xygraph_api.navigation.GraphScreenProvider
