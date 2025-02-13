@@ -3,10 +3,10 @@ package com.podonin.xygraph.navigation
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import com.github.terrakok.cicerone.androidx.FragmentScreen
+import com.podonin.points_count_api.domain.entity.XYPoint
 import com.podonin.xygraph.navigation.entity.GraphScreenData
-import com.podonin.xygraph.presentation.GraphFragment
+import com.podonin.xygraph.presentation.graphscreen.GraphFragment
 import com.podonin.xygraph_api.navigation.GraphScreenProvider
-import com.podonin.xygraph_api.entity.XYPoint
 import javax.inject.Inject
 import javax.inject.Singleton
 
