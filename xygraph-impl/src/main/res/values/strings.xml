@@ -3,6 +3,7 @@
     <string name="table_index">Index</string>
     <string name="table_x_label">X</string>
     <string name="table_y_label">Y</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="toast_saved_graph">Graph saved to gallery</string>
+    <string name="toast_failed_to_save_graph">Failed to save graph</string>
+    <string name="save_graph">Save graph</string>
 </resources>

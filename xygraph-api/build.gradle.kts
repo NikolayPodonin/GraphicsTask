@@ -13,5 +13,6 @@ kotlin {
 }
 
 dependencies {
+    implementation(project(":points-count-api"))
     implementation(libs.cicerone)
 }

@@ -1,14 +1,18 @@
 package com.podonin.xygraph.presentation.widget
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
 import android.util.AttributeSet
+import android.view.MotionEvent
+import android.view.ScaleGestureDetector
 import android.view.View
+import com.podonin.points_count_api.domain.entity.XYPoint
 import com.podonin.xygraph.R
-import com.podonin.xygraph_api.entity.XYPoint
 import kotlin.math.abs
 
 /**
@@ -55,6 +59,21 @@ class XYGraphView : View {
     private var stepX = 0f
     private var stepY = 0f
     private val mappedPoints = mutableListOf<XYPoint>()
+    private val linePath = Path()
+
+    private var scaleFactor = 1f
+    private val scaleGestureDetector by lazy {
+        ScaleGestureDetector(context, object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
+            override fun onScale(detector: ScaleGestureDetector): Boolean {
+                scaleFactor *= detector.scaleFactor
+
+                scaleFactor = scaleFactor.coerceIn(0.5f, 3f)
+
+                invalidate()
+                return true
+            }
+        })
+    }
 
     constructor(context: Context) : super(context) {
         init(null, 0)
@@ -77,11 +96,14 @@ class XYGraphView : View {
         pointPaint.color = a.getColor(R.styleable.XYGraphView_pointColor, pointPaint.color)
         val defPadding = context.resources.getDimensionPixelSize(R.dimen.graph_view_padding)
         padding = a.getDimensionPixelSize(R.styleable.XYGraphView_graphPadding, defPadding).toFloat()
+        isCentered = a.getBoolean(R.styleable.XYGraphView_isCentered, true)
 
         a.recycle()
     }
 
     fun setPoints(newPoints: List<XYPoint>) {
+        if (newPoints.isEmpty()) return
+
         points.clear()
         points.addAll(newPoints)
         minX = points.minOf { it.x }
@@ -101,6 +123,24 @@ class XYGraphView : View {
     fun switchIsSmooth() {
         isSmooth = !isSmooth
         invalidate()
+    }
+
+    fun saveGraphToBitmap(): Bitmap {
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+
+        draw(canvas)
+
+        return bitmap
+    }
+
+
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (event.pointerCount > 1) {
+            parent.requestDisallowInterceptTouchEvent(true)
+        }
+        return scaleGestureDetector.onTouchEvent(event) || super.onTouchEvent(event)
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -132,6 +172,10 @@ class XYGraphView : View {
 
         if (points.isEmpty()) return
 
+
+        canvas.save()
+        canvas.scale(scaleFactor, scaleFactor, width / 2f, height / 2f)
+
         canvas.drawLine(padding, zeroY, width - padding, zeroY, axisPaint) // X
         canvas.drawLine(zeroX, padding, zeroX, height - padding, axisPaint) // Y
 
@@ -147,6 +191,8 @@ class XYGraphView : View {
         mappedPoints.forEach { point ->
             canvas.drawCircle(point.x, point.y, 8f, pointPaint)
         }
+
+        canvas.restore()
     }
 
     private fun recalculateSizes() {
@@ -240,8 +286,8 @@ class XYGraphView : View {
     private fun Canvas.drawSmoothLine() {
         if (mappedPoints.size < 2) return
 
-        val path = Path()
-        path.moveTo(mappedPoints[0].x, mappedPoints[0].y)
+        linePath.reset()
+        linePath.moveTo(mappedPoints[0].x, mappedPoints[0].y)
 
         for (i in 0 until mappedPoints.lastIndex) {
             val p0 = if (i > 0) mappedPoints[i - 1] else mappedPoints[i]
@@ -255,10 +301,10 @@ class XYGraphView : View {
             val controlX2 = p2.x - (p3.x - p1.x) / 6f
             val controlY2 = p2.y - (p3.y - p1.y) / 6f
 
-            path.cubicTo(controlX1, controlY1, controlX2, controlY2, p2.x, p2.y)
+            linePath.cubicTo(controlX1, controlY1, controlX2, controlY2, p2.x, p2.y)
         }
 
-        drawPath(path, linePaint)
+        drawPath(linePath, linePaint)
     }
 
     private fun Canvas.drawStrictLine() {

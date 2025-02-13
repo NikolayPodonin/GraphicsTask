@@ -42,16 +42,17 @@ android {
 
 dependencies {
 
+    implementation(project(":common-network"))
     implementation(project(":xygraph-api"))
     implementation(project(":xygraph-impl"))
+    implementation(project(":photo-saver-api"))
+    implementation(project(":photo-saver-impl"))
+    implementation(project(":points-count-api"))
+    implementation(project(":points-count-impl"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity)
-    implementation(libs.androidx.recycler)
     implementation(libs.cicerone)
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
 }

@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    >
+    android:fitsSystemWindows="true">
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -14,7 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="@dimen/material_margin_big">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
@@ -22,22 +21,29 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:overScrollMode="never"
-                android:padding="8dp"
+                android:padding="@dimen/material_margin_medium"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
 
             <com.podonin.xygraph.presentation.widget.XYGraphView
                 android:id="@+id/graphView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="16dp"
+                android:layout_margin="@dimen/material_margin_big"
                 app:axisColor="@color/dark_blue"
-                app:gridColor="@color/light_blue"
-                app:pointColor="@color/orange"
-                app:lineColor="@color/aquamarine"
                 app:graphPadding="@dimen/graph_view_padding"
-                app:isCentered="true"
-                />
+                app:gridColor="@color/light_blue"
+                app:isCentered="false"
+                app:lineColor="@color/aquamarine"
+                app:pointColor="@color/orange" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/saveGraphButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="@dimen/material_margin_big"
+                android:minHeight="@dimen/material_margin_tap_zone"
+                android:text="@string/save_graph" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
@@ -46,10 +52,9 @@
         android:id="@+id/smoothButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="Set smooth"
-        android:src="@drawable/ic_is_smooth"
         android:layout_gravity="bottom|end"
-        android:layout_margin="32dp"
-        />
+        android:layout_margin="@dimen/material_margin_huge"
+        android:contentDescription="Set smooth"
+        android:src="@drawable/ic_is_smooth" />
 </FrameLayout>
 
