@@ -115,11 +115,6 @@ class XYGraphView : View {
         invalidate()
     }
 
-    fun setIsSmooth(isSmooth: Boolean) {
-        this.isSmooth = isSmooth
-        invalidate()
-    }
-
     fun switchIsSmooth() {
         isSmooth = !isSmooth
         invalidate()
