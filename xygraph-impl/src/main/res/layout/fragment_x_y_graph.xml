@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
@@ -43,7 +44,9 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="@dimen/material_margin_big"
                 android:minHeight="@dimen/material_margin_tap_zone"
-                android:text="@string/save_graph" />
+                android:text="@string/save_graph"
+                android:visibility="gone"
+                tools:visibility="visible" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
@@ -55,6 +58,8 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/material_margin_huge"
         android:contentDescription="Set smooth"
-        android:src="@drawable/ic_is_smooth" />
+        android:src="@drawable/ic_is_smooth"
+        android:visibility="gone"
+        tools:visibility="visible" />
 </FrameLayout>
 

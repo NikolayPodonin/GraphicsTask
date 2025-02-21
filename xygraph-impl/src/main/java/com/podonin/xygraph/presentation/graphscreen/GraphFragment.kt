@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.podonin.common_ui.utils.collectOnUi
 import com.podonin.xygraph.R
 import com.podonin.xygraph.databinding.FragmentXYGraphBinding
 import com.podonin.xygraph.navigation.entity.GraphScreenData
@@ -28,12 +29,10 @@ class GraphFragment : Fragment() {
 
     private val viewModel: GraphViewModel by viewModels()
 
-    private var screenData: GraphScreenData? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            screenData = it.getParcelable(ARG_POINTS)
+            viewModel.setScreenData(it.getParcelable(ARG_POINTS))
         }
     }
 
@@ -54,21 +53,6 @@ class GraphFragment : Fragment() {
     private fun initViews() {
         binding?.run {
             recyclerView.adapter = tableAdapter
-            val xyPoints = screenData?.points.orEmpty()
-            val itemList = listOf(
-                TableItem.TitleItem(
-                    title = getString(R.string.table_index),
-                    xLabel = getString(R.string.table_x_label),
-                    yLabel = getString(R.string.table_y_label)
-                )
-            ) + xyPoints.map {
-                TableItem.PointItem(it)
-            }
-
-            tableAdapter.setData(itemList)
-            graphView.setPoints(
-                xyPoints.sortedBy { it.x }
-            )
 
             smoothButton.setOnClickListener {
                 graphView.switchIsSmooth()
@@ -77,20 +61,25 @@ class GraphFragment : Fragment() {
                 val bitmap = graphView.saveGraphToBitmap()
                 viewModel.saveGraphToGallery(bitmap)
             }
-            smoothButton.isVisible = xyPoints.isNotEmpty()
-            saveGraphButton.isVisible = xyPoints.isNotEmpty()
         }
     }
 
     private fun initObservers() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.showToast.collectLatest { stringRes ->
-                    Toast.makeText(requireContext(), stringRes, Toast.LENGTH_SHORT).show()
-                }
+        collectOnUi(viewModel.showToast) { stringRes ->
+            Toast.makeText(requireContext(), stringRes, Toast.LENGTH_SHORT).show()
+        }
+        collectOnUi(viewModel.items) { items ->
+            tableAdapter.setData(items)
+        }
+        collectOnUi(viewModel.points) { points ->
+            binding?.run {
+                graphView.setPoints(points)
+                smoothButton.isVisible = points.isNotEmpty()
+                saveGraphButton.isVisible = points.isNotEmpty()
             }
         }
     }
+
 
     companion object {
         private const val ARG_POINTS = "ARG_POINTS"

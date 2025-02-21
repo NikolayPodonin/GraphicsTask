@@ -10,9 +10,7 @@ class PointsCountInteractorImpl @Inject constructor(
 
     override suspend fun getPoints(count: Int): Result<List<XYPoint>> {
         return runCatching {
-            pointsCountRepository.getPoints(count).mapIndexed { index, pointEntity ->
-                XYPoint(index, pointEntity.x, pointEntity.y)
-            }
+            pointsCountRepository.getPoints(count)
         }
     }
 }
